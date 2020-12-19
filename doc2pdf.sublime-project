@@ -1,0 +1,34 @@
+{
+	"folders":
+	[
+		{
+			"name": "Дистанционное. Конвертирование документов в PDF",
+			"path": ".",
+			"folder_exclude_patterns": [
+				".git",
+				"cache",
+				".cache",
+				"docs",
+				"font",
+				"build",
+				"prejscss",
+				"resource",
+				"bower_components",
+				"node_modules",
+				"installer",
+				"temp"
+			],
+			"file_exclude_patterns": [
+				"*.sublime-workspace",
+				"*.sublime-project",
+				"*.iss",
+				"*.dll",
+				"*.exe",
+				"*-lock.*",
+				"*.rc",
+				"*.res",
+				"*.radiopack"
+			]
+		}
+	]
+}

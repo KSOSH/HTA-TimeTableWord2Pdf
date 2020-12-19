@@ -1,0 +1,98 @@
+html(lang="ru")
+	head
+		meta(http-equiv="content-type" content="text/html; charset=utf-8")
+		meta(http-equiv="x-ua-compatible" content="IE=9")
+		title Конвертирование расписаний дистанционных уроков
+		//link(rel="stylesheet" href="main.css")
+		HTA:APPLICATION(ID="oHTA" BORDER="dialog" BORDERSTYLE="none" CAPTION="yes" MAXIMIZEBUTTON="no" MINIMIZEBUTTON="no" SHOWINTASKBAR="yes" SINGLEINSTANCE="yes" SYSMENU="yes" VERSION="1.0" WINDOWSTATE="normal" SCROLL="auto" icon="https://komsomol.minobr63.ru/favicon.ico" APPLICATIONNAME="DOC2PDF" SELECTION="no" CONTEXTMENU="no")
+	body
+		.header.clearfix
+			h1.text-center.text-bold-italic Конвертирование расписаний дистанционных уроков
+			.help-icon
+				include pug_inc/helpicon.pug
+		.wrapper
+			.main
+				.app.clearfix
+					.type
+						fieldset
+							legend Наименование организации
+							label.input-label
+								input#OU(type="text" tabindex="-1")
+						fieldset
+							legend Тип расписания
+							label.input-label
+								input#RS(type="radio" name="TypeTimeTable" checked tabindex="-1")
+								|Расписание уроков
+							label.input-label.last
+								input#VD(type="radio" name="TypeTimeTable" tabindex="-1")
+								|Внеурочные занятия
+						fieldset
+							legend Данные для CSV файла
+							p Введите путь директории на сервере в которую будут залиты файлы.
+							label.input-label.last
+								input#SRV(type="text" tabindex="-1")
+					.folder
+						#folderPathText
+						input#folderPath(type="text" disabled="disabled" value="" tabindex="1")
+						button#btnSelectPath Выбрать папку
+					#output
+						|&nbsp;
+					.progress
+						.progress_wrapper
+							#progress_line(style="width: 50%")
+						#progress_value.text-center
+							|50%
+					.button.text-center
+						button#btnConvert(disabled="disabled" tabindex="2") СТАРТ
+		.footer.text-center
+			|Developer by  
+			a#ProjectSoft.link Чернышёв Андрей aka ProjectSoft
+			br
+			a#GBOU.link.last ГБОУ СОШ пос. Комсомольский м. р Кинельский Самарской обл.
+			br
+			|© 2009 ‒ all right reserved
+		.help#HELP(style="display: none;")
+			.help_wrapper
+				.help_header
+					#btnClose(title="Закрыть")
+						|X
+					h2.text-center
+						|Справка
+				.help_content
+					ol
+						li
+							p
+								|Работа программы
+								.text-center
+									include pug_inc/0000.pug
+						li
+							p
+								|Структура папки «Дистанционное». Обратите внимание, что расписания лежат по датам
+								.text-center
+									include pug_inc/0001.pug
+						li
+							p
+								|Имена файлов в папке на конкретно один день
+								.text-center
+									include pug_inc/0002.pug
+						li
+							p
+								|Результат работы программы. Файлы так же складываются в директории по датам и по типам расписания
+								.text-center
+									include pug_inc/0003.pug
+						li
+							p
+								|Результат записи в CSV файл для последующего использования в админке сайта при размещении расписания. У нашей школы сайт использует Evolution CMS, где установлено поле для прикрепления файлов multiTv и там есть возможность автоматического заполнения поля из данных CSV файлов
+								.text-center
+									include pug_inc/0004.pug
+						li
+							p
+								|Заполненое поле multiTv в админке Evolution CMS
+								.text-center
+									include pug_inc/0005.pug
+		style
+			include css/main.css
+		//script(language="VBScript")
+			|   
+			include vbs/index.vbs
+		script(language="VBScript" src="vbs/index.vbs")
