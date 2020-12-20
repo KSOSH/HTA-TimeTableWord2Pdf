@@ -10,8 +10,8 @@ html(lang="ru")
 			h1.text-center.text-bold-italic Конвертирование расписаний дистанционных уроков
 			.help-icon
 				include pug_inc/helpicon.pug
-		.wrapper
-			.main
+		.wrapper.clearfix
+			.main.clearfix
 				.app.clearfix
 					.type
 						fieldset
@@ -44,7 +44,7 @@ html(lang="ru")
 							|50%
 					.button.text-center
 						button#btnConvert(disabled="disabled" tabindex="2") СТАРТ
-		.footer.text-center
+		#FOOTER.footer.text-center
 			|Developer by  
 			a#ProjectSoft.link Чернышёв Андрей aka ProjectSoft
 			br

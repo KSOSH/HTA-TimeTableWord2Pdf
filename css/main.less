@@ -3,20 +3,23 @@
 @import "less_inc/init";
 @import "less_inc/clearfix";
 @import "less_inc/text_utils";
-@import "less_inc/header";
-@import "less_inc/main";
-@import "less_inc/footer";
 @import "less_inc/folder";
 @import "less_inc/link";
 @import "less_inc/type";
 @import "less_inc/progress";
 @import "less_inc/help";
+@import "less_inc/header";
+@import "less_inc/main";
+@import "less_inc/footer";
 .header,
 .footer,
 .main {
-	position: relative;
 	width: 100%;
 	background-color: @bg;
+}
+.header,
+.main {
+	position: relative;
 }
 .header,
 .footer {

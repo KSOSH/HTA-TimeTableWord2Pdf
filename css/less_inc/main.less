@@ -1,11 +1,16 @@
 
 .wrapper {
 	position: relative;
-	padding-bottom: 3em;
+	padding-bottom: 8.5em;
 	overflow: auto;
-	height: ~'calc(100% - 8.5em)';
+	height: 100%;
+	overflow: hidden;
+	//max-height: ~'calc(100% - 8.5em)';
 	.main {
 		z-index: 1;
+		overflow: auto;
+		position: relative;
+		height: 100%;
 		.app {
 			width: 680px;
 			margin-right: auto;

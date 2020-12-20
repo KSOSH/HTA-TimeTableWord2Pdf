@@ -1,20 +1,23 @@
 .footer {
 	position: fixed;
+	font-family: Consolas, Tahoma, sans-serif;
+	font-size: 12px;
+	line-height: 1;
+	margin: 0;
+	padding: 0;
 	width:100%;
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
-	box-shadow: 0 0 3px 1px #000;
-	margin: 0;
-	padding: 0;
-	padding-top:5px;
-	font-family: Consolas, Tahoma, sans-serif;
-	font-size: 12px;
-	line-height: 1;
+	box-shadow: 0 0 1px 1px #000;
+	.clearfix();
 	a {
 		display: inline-block;
 		margin-top: 0;
 		margin-bottom: 0;
 		padding-bottom: .3em;
+		&.link {
+			padding-top: 5px;
+		}
 	}
 }

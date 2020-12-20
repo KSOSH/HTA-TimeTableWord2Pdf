@@ -42,14 +42,12 @@ Dim btnClose: Set btnClose = document.getElementById("btnClose")
 
 window.resizeTo windowW, windowH
 window.moveTo (window.screen.availWidth - windowW) / 2, (window.screen.availHeight - windowH) / 2
-
 ReadIni.Add "GBOU", tGboy
 ReadIni.Add "SRV", "assets/files/0000/do"
 
 ReadIniFile "config.cfg"
 Reset
 CheckData
-
 
 ' Создадим папку "Дистанционное". Данная папка должна всегда существовать на рабочем столе. 
 ' Будем работать только в ней, тем самым не засоряем систему. 
@@ -205,6 +203,10 @@ Sub EnabledApp
 	btnSelectPath.Disabled = False
 	RS.Disabled = False
 	VD.Disabled = False
+End Sub
+
+Sub Window_OnResize()
+	MsgBox "Resize"
 End Sub
 
 Sub RS_OnChange()
