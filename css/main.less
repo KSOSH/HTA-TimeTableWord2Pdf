@@ -4,16 +4,13 @@
 @import "less_inc/clearfix";
 @import "less_inc/text_utils";
 @import "less_inc/header";
+@import "less_inc/main";
 @import "less_inc/footer";
 @import "less_inc/folder";
+@import "less_inc/link";
 @import "less_inc/type";
 @import "less_inc/progress";
 @import "less_inc/help";
-.link {
-	color: #0098ff;
-	text-decoration: underline;
-	cursor: pointer;
-}
 .header,
 .footer,
 .main {
@@ -21,33 +18,7 @@
 	width: 100%;
 	background-color: @bg;
 }
-.main {
-	z-index: 1;
-}
 .header,
 .footer {
 	z-index: 100;
-}
-.wrapper {
-	position: relative;
-	padding-bottom: 3em;
-	overflow: auto;
-	height: ~'calc(100% - 8.5em)';
-}
-.app {
-	width: 680px;
-	margin-right: auto;
-	margin-left: auto;
-	position: relative;
-	padding: 2rem;
-	font-family: Tahoma, sans-serif;
-}
-.button {
-	margin-top: 1.2em;
-}
-#output {
-	line-height: 1.6em;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	font-size: .8em;
 }

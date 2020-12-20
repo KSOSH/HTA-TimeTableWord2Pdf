@@ -21,13 +21,11 @@
 			"file_exclude_patterns": [
 				"*.sublime-workspace",
 				"*.sublime-project",
-				"*.iss",
+				"desktop.ico",
+				"*.ini",
 				"*.dll",
 				"*.exe",
-				"*-lock.*",
-				"*.rc",
-				"*.res",
-				"*.radiopack"
+				"*-lock.*"
 			]
 		}
 	],
