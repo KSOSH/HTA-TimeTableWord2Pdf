@@ -1,111 +1,38 @@
+@height: ~'calc(100vh - 1.4em)';
+@bg: Window;
+@import "less_inc/init";
+@import "less_inc/clearfix";
 @import "less_inc/text_utils";
-@height: ~'calc(100vh - 1.4em)';;
-* {
-	&,
-	&::before,
-	&::after {
-		box-sizing: border-box;
-	}
-}
-html, body {
-	height: @height;
-	position: relative;
-	padding: 0;
-	margin: 0;
-	background-color: Window;
-	overflow: hidden;
-	font-size: .9em;
-	line-height: 1.2;
-}
-input, button, label, .progress {
-	user-select: none;
-}
-button, input[type=button] {
-	cursor: pointer;
-	font-size: .9em;
-}
-img {
-	display: inline-block;
-	border: unset;
-	max-width: 100%;
-}
-p {
-	margin-top: 0px;
-}
-.type {
-	fieldset {
-		p {
-			margin-bottom: .6em;
-		}
-	}
-}
+@import "less_inc/header";
+@import "less_inc/footer";
+@import "less_inc/folder";
+@import "less_inc/type";
+@import "less_inc/progress";
+@import "less_inc/help";
 .link {
 	color: #0098ff;
 	text-decoration: underline;
 	cursor: pointer;
-}
-.clearfix {
-	display: table;
-	content: "";
-	clear: both;
-	width: 0px;
-	height: 0px;
-	margin: 0px;
-	padding: 0px;
 }
 .header,
 .footer,
 .main {
 	position: relative;
 	width: 100%;
-	background-color: Window;
+	background-color: @bg;
+}
+.main {
+	z-index: 1;
 }
 .header,
 .footer {
 	z-index: 100;
-}
-.main {
-	z-index: 1;
 }
 .wrapper {
 	position: relative;
 	padding-bottom: 3em;
 	overflow: auto;
 	height: ~'calc(100% - 8.5em)';
-}
-.header {
-	box-shadow: 0 0 1em rgba(0, 0, 0, .7);
-	.help-icon {
-		position: absolute;
-		z-index: 1;
-		top: 1em;
-		right: 1em;
-		cursor: pointer;
-	}
-	h1 {
-		padding-left: 3em;
-		padding-right: 3em;
-	}
-}
-.footer {
-	position: fixed;
-	width:100%;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	box-shadow: 0 0 3px 1px #000;
-	margin: 0;
-	padding: 0;
-	padding-top:5px;
-	font-family: Consolas, Tahoma, sans-serif;
-	font-size: 12px;
-	line-height: 1;
-	a {
-		display: inline-block;
-		margin-top: 0;
-		margin-bottom: 0;
-		padding-bottom: .3em;
-	}
 }
 .app {
 	width: 680px;
@@ -115,136 +42,8 @@ p {
 	padding: 2rem;
 	font-family: Tahoma, sans-serif;
 }
-.help {
-	width: 100%;
-	height: 100%;
-	position: fixed;
-	top: 0;
-	left: 0;
-	z-index: 1000;
-	display: none;
-	overflow: hidden;
-	background-color: white;
-	font-family: Tahoma, sans-serif;
-	//font-size: 1.5em;
-	&_wrapper {
-		position: relative;
-		height: 100%;
-	}
-	&_content {
-		overflow: auto;
-		padding-left: 1em;
-		padding-right: 1em;
-		height: ~'calc(100% - 3em)';
-		overflow: auto;
-		ol {
-			padding-left: 1em;
-			padding-bottom: 2em;
-			li {
-				&::marker {
-					font-weight: bold;
-				}
-			}
-			img {
-				margin-top: .5em;
-			}
-		}
-	}
-	&_header {
-		height: 2em;
-		background-color: white;
-		box-shadow: 0 0 3px #000;
-		position: relative;
-	}
-}
-#btnClose {
-	position: absolute;
-	right: .9em;
-	top: 0em;
-	cursor: pointer;
-}
-.show {
-	.help {
-		display: block;
-	}
-}
-.folder {
-	white-space: nowrap;
-	#folderPath {
-		//width: ~'calc(100% - 150px)';
-		// display: inline-block;
-		display: none;
-	}
-	#folderPathText {
-		width: 530px;
-		line-height: 1.6em;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		font-size: .8em;
-		border: 2px solid;
-		border-top-color: AppWorkspace;
-		border-left-color: AppWorkspace;
-		border-bottom-color: ButtonFace;
-		border-right-color: ButtonFace;
-	}
-	#btnSelectPath {
-		margin-top: 0px;
-	}
-	#folderPathText,
-	#btnSelectPath {
-		display: inline-block;
-		vertical-align: middle;
-	}
-}
-.progress {
-	box-shadow: 0 0 1px 1px #000;
-	&,
-	&_wrapper {
-		position: relative;
-		height: 2em;
-		width: 100%;
-	}
-}
-.type {
-	margin-bottom: 1.4em;
-	label {
-		display: block;
-		cursor: pointer;
-		margin-bottom: .6em;
-		&.last {
-			margin-bottom: unset;
-		}
-	}
-	input {
-		margin-right: .6em;
-		&[type=text] {
-			width: 100%;
-		}
-	}
-}
 .button {
 	margin-top: 1.2em;
-}
-#progress {
-	&_line,
-	&_value {
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 99%;
-		overflow: hidden;
-	}
-	&_line {
-		background-color: lime;
-		transition: width .3s ease;
-	}
-	&_value {
-		width: 100%;
-		color: black;
-		font-family: Consolas, sans-serif;
-		font-weight: bold;
-		line-height: 2em;
-	}
 }
 #output {
 	line-height: 1.6em;

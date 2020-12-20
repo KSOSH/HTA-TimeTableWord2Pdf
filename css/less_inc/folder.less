@@ -1,0 +1,28 @@
+.folder {
+	white-space: nowrap;
+	#folderPath {
+		//width: ~'calc(100% - 150px)';
+		// display: inline-block;
+		display: none;
+	}
+	#folderPathText {
+		width: 530px;
+		line-height: 1.6em;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		font-size: .8em;
+		border: 2px solid;
+		border-top-color: AppWorkspace;
+		border-left-color: AppWorkspace;
+		border-bottom-color: ButtonFace;
+		border-right-color: ButtonFace;
+	}
+	#btnSelectPath {
+		margin-top: 0px;
+	}
+	#folderPathText,
+	#btnSelectPath {
+		display: inline-block;
+		vertical-align: middle;
+	}
+}

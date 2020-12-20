@@ -1,0 +1,32 @@
+.progress {
+	box-shadow: 0 0 1px 1px #000;
+	overflow: hidden;
+	background-color: @bg;
+	&,
+	&_wrapper {
+		position: relative;
+		height: 2em;
+		width: 100%;
+	}
+}
+#progress {
+	&_line,
+	&_value {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 99%;
+		overflow: hidden;
+	}
+	&_line {
+		background-color: lime;
+		transition: width .3s ease;
+	}
+	&_value {
+		width: 100%;
+		color: black;
+		font-family: Consolas, sans-serif;
+		font-weight: bold;
+		line-height: 2em;
+	}
+}

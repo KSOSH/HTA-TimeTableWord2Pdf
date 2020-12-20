@@ -30,5 +30,18 @@
 				"*.radiopack"
 			]
 		}
-	]
+	],
+    "settings":
+    {
+        "tab_size": 4,
+		"ignored_packages": ["Vintage", "Less2Css"]
+    },
+    "build_systems":
+    [
+        {
+            "name": "Pug2Hta",
+            "shell_cmd": "pug \"$file\" -E hta -o \"$file_path\" --doctype html --pretty",
+			"selector": "*.pug"
+        }
+    ]
 }

@@ -1,0 +1,32 @@
+* {
+	&,
+	&::before,
+	&::after {
+		box-sizing: border-box;
+	}
+}
+html, body {
+	height: @height;
+	position: relative;
+	padding: 0;
+	margin: 0;
+	background-color: @bg;
+	overflow: hidden;
+	font-size: .9em;
+	line-height: 1.2;
+}
+input, button, label, .progress {
+	user-select: none;
+}
+button, input[type=button] {
+	cursor: pointer;
+	font-size: .9em;
+}
+img {
+	display: inline-block;
+	border: unset;
+	max-width: 100%;
+}
+p {
+	margin-top: 0px;
+}

@@ -1,4 +1,9 @@
 *.map.*
+*.html
+*.css
+*/**/*.map.*
+*/**/*.html
+*/**/*.css
 *.sublime-workspace
 desktop.ini
 desktop.ico

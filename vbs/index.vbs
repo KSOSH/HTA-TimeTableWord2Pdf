@@ -140,8 +140,16 @@ Function replaceSpace(fName)
 	Dim str
 	regExc.Global = True
 	regExc.Pattern = "\s+"
-	str = regExc.Replace(fName, "")
+	str = regExc.Replace(fName, " ")
 	replaceSpace = str
+End Function
+
+Function removeSpace(fName)
+	Dim str
+	regExc.Global = True
+	regExc.Pattern = "\s+"
+	str = regExc.Replace(fName, "")
+	removeSpace = str
 End Function
 
 Sub Reset
@@ -282,9 +290,9 @@ Sub btnConvert_OnClick()
 					' Получаем объект свойст документа
 					Set customProp = objDocument.BuiltinDocumentProperties
 					' Получаем дату
-					rsDate = objFSO.GetBaseName(replaceSpace(strSourceFolder)) & "." & objFSO.GetExtensionName(strSourceFolder)
+					rsDate = removeSpace(objFSO.GetBaseName(removeSpace(strSourceFolder)) & "." & objFSO.GetExtensionName(strSourceFolder))
 					' Собираем заголовок
-					docTitle = strTimeTable & " " & objFSO.GetBaseName(UCase(replaceSpace(objFile.Name))) & cPrefixTitle & rsDate
+					docTitle = strTimeTable & " " & objFSO.GetBaseName(UCase(removeSpace(objFile.Name))) & cPrefixTitle & rsDate
 					
 					' Перебираем свойства документа
 					For Each prop in customProp
@@ -307,9 +315,9 @@ Sub btnConvert_OnClick()
 					Next
 					' Сохраняем документ как PDF. Транслит имени файла для сохранения
 					' Так же сначало сохраниться сам документ перед конвертацией.
-					objDocument.SaveAs2 objFSO.BuildPath(outputDir, Rus2Lat(objFSO.GetBaseName(objFile.Name)) & ".pdf"), PDF
+					objDocument.SaveAs2 objFSO.BuildPath(outputDir, Rus2Lat(removeSpace(objFSO.GetBaseName(objFile.Name))) & ".pdf"), PDF
 					' Записываем данные в csv файл
-					csvText = """" & docTitle & """;""" & assetsFolder & "/" & rsDate & srvTimeTable & Rus2Lat(objFSO.GetBaseName(objFile.Name)) & ".pdf"""
+					csvText = """" & docTitle & """;""" & assetsFolder & "/" & rsDate & srvTimeTable & Rus2Lat(removeSpace(objFSO.GetBaseName(objFile.Name))) & ".pdf"""
 					csvFile.WriteLine(csvText)
 					' Закрываем документ
 					objDocument.Close
@@ -397,145 +405,82 @@ Function Rus2Lat(strRus)
 	Dim i
 	Dim strTemp
 	Dim strLat
+	strRus = LCase(strRus)
 	For i = 1 To Len(strRus)
 		strTemp = Mid(strRus, i, 1)			 
 		Select Case strTemp
 			Case "а"
 				strLat = strLat & "a"
-			Case "А"
-				strLat = strLat & "a"
 			Case "б"
-				strLat = strLat & "b"
-			Case "Б"
 				strLat = strLat & "b"
 			Case "в"
 				strLat = strLat & "v"
-			Case "В"
-				strLat = strLat & "v"
 			Case "г"
-				strLat = strLat & "g"
-			Case "Г"
 				strLat = strLat & "g"
 			Case "д"
 				strLat = strLat & "d"
-			Case "Д"
-				strLat = strLat & "d"
 			Case "е"
-				strLat = strLat & "e"
-			Case "Е"
 				strLat = strLat & "e"
 			Case "ё"
 				strLat = strLat & "e"
-			Case "Ё"
-				strLat = strLat & "e"
 			Case "ж"
-				strLat = strLat & "zh"
-			Case "Ж"
 				strLat = strLat & "zh"
 			Case "з"
 				strLat = strLat & "z"
-			Case "З"
-				strLat = strLat & "z"
 			Case "и"
-				strLat = strLat & "i"
-			Case "И"
 				strLat = strLat & "i"
 			Case "й"
 				strLat = strLat & "i"
-			Case "Й"
-				strLat = strLat & "i"
 			Case "к"
-				strLat = strLat & "k"
-			Case "К"
 				strLat = strLat & "k"
 			Case "л"
 				strLat = strLat & "l"
-			Case "Л"
-				strLat = strLat & "l"
 			Case "м"
-				strLat = strLat & "m"
-			Case "М"
 				strLat = strLat & "m"
 			Case "н"
 				strLat = strLat & "n"
-			Case "Н"
-				strLat = strLat & "n"
 			Case "о"
-				strLat = strLat & "o"
-			Case "О"
 				strLat = strLat & "o"
 			Case "п"
 				strLat = strLat & "p"
-			Case "П"
-				strLat = strLat & "p"
 			Case "р"
-				strLat = strLat & "r"
-			Case "Р"
 				strLat = strLat & "r"
 			Case "с"
 				strLat = strLat & "s"
-			Case "С"
-				strLat = strLat & "s"
 			Case "т"
-				strLat = strLat & "t"
-			Case "Т"
 				strLat = strLat & "t"
 			Case "у"
 				strLat = strLat & "u"
-			Case "У"
-				strLat = strLat & "u"
 			Case "ф"
-				strLat = strLat & "f"
-			Case "Ф"
 				strLat = strLat & "f"
 			Case "х"
 				strLat = strLat & "kh"
-			Case "Х"
-				strLat = strLat & "kh"
 			Case "ц"
-				strLat = strLat & "ts"
-			Case "Ц"
 				strLat = strLat & "ts"
 			Case "ч"
 				strLat = strLat & "ch"
-			Case "Ч"
-				strLat = strLat & "ch"
 			Case "ш"
-				strLat = strLat & "sh"
-			Case "Ш"
 				strLat = strLat & "sh"
 			Case "щ"
 				strLat = strLat & "sch"
-			Case "Щ"
-				strLat = strLat & "sch"
 			Case "ъ"
-				strLat = strLat & ""
-			Case "Ъ"
 				strLat = strLat & ""
 			Case "ы"
 				strLat = strLat & "y"
-			Case "Ы"
-				strLat = strLat & "y"
 			Case "ь"
-				strLat = strLat & ""
-			Case "Ь"
 				strLat = strLat & ""
 			Case "э"
 				strLat = strLat & "e"
-			Case "Э"
-				strLat = strLat & "e"
 			Case "ю"
 				strLat = strLat & "yu"
-			Case "Ю"
-				strLat = strLat & "yu"
 			Case "я"
-				strLat = strLat & "ya"
-			Case "Я"
 				strLat = strLat & "ya"
 			case "«"
 				strLat = strLat & ""
 			case "»"
 				strLat = strLat & ""
+			case "№"
+				strLat = strLat & "n"
 			case " "
 				strLat = strLat & " "
 			Case Else
