@@ -21,10 +21,10 @@ module.exports = function(grunt) {
 		},
 		htmlImagesDataUri: {
 			dist: {
-				src: ['pug_inc/*.pug'],
-				dest: 'pug_inc/include/',
+				src: ['test/*.html'],
+				dest: 'test/',
 				options: {
-					target: ['test/images/*.*', 'test/help/*.*'],
+					target: ['images/*.*', 'help/*.*'],
 					baseDir: './'
 				}
 			}
@@ -46,5 +46,5 @@ module.exports = function(grunt) {
 			}
 		}
 	});
-	grunt.registerTask('default',["less", "htmlImagesDataUri", "pug", "exec"]);
+	grunt.registerTask('default',["less", "pug", "htmlImagesDataUri", "exec"]);
 }
