@@ -4,13 +4,14 @@ Const PDF = 17
 Const cPrefixTitle = " КЛАССА НА "
 Const windowW = 1024
 Const windowH = 740
-Dim dlgType
+
 Dim WShell: Set WShell = CreateObject("WScript.Shell")
 Dim objFSO: Set objFSO = CreateObject("Scripting.FileSystemObject")
 Dim objDlg: Set objDlg = CreateObject("Shell.Application")
 Dim regExc: Set regExc = CreateObject("VBScript.RegExp")
 Dim ReadIni: Set ReadIni = CreateObject("Scripting.Dictionary")	
 Dim objFile
+
 Dim objPlayer
 Dim sndFile
 sndFile =  WShell.ExpandEnvironmentStrings("%windir%") & "\Media\chimes.wav"
@@ -21,6 +22,7 @@ Dim startPath
 startPath = WShell.SpecialFolders.Item("Desktop") & "\Дистанционное"
 Dim tmpPath
 tmpPath = WShell.SpecialFolders.Item("Temp") & "\Dist"
+
 Dim srvTimeTable
 Dim winTimeTable
 Dim strTimeTable
@@ -49,6 +51,7 @@ ReadIniFile "config.cfg"
 Reset
 CheckData
 
+'MsgBox TypeName(Window)
 ' Создадим папку "Дистанционное". Данная папка должна всегда существовать на рабочем столе. 
 ' Будем работать только в ней, тем самым не засоряем систему. 
 ' В данную папку нужно размещать директории с папками расписаний.
@@ -72,7 +75,7 @@ Function openBrowserDlg
 	' Запускаем диалог выбора директории
 	' 512 - убрать кнопку "Создать папку". 1 - Выбирать только папки файловой системы. 512 + 1 = 513
 	' 16 - установить начальную дирректорию "Рабочий стол" без отображения виртуальных папок.
-	Set objFolder = objDlg.BrowseForFolder (0, "Выберите каталог c " & dlgType & "." & vbCrlf & "Формат имени каталога - 	dd.mm.YYYY", 513, startPath) ' 0'
+	Set objFolder = objDlg.BrowseForFolder (0, strTimeTable & "." & vbCrlf & "Формат имени каталога - 	dd.mm.YYYY", 513, startPath) ' 0'
 	' Если objFolder объект Folder
 	If (Not objFolder Is Nothing) Then
 		' Возвращаем путь до выбранной директории
@@ -272,7 +275,7 @@ Sub btnConvert_OnClick()
 		Set csvFile = objFSO.CreateTextFile(outputDir & "csv.csv", True)
 		count = Files.Count
 		For Each objFile In Files
-			DoEvents
+			DoEvents(0)
 			If StrComp(objFSO.GetExtensionName(objFile.Name), "docx", vbTextCompare) = 0 Or StrComp(objFSO.GetExtensionName(objFile.Name), "doc", vbTextCompare) = 0 Then
 				' Проверяем имя файла. Если имя файла начинается с ~$ то он временный
 				regExc.Global = False
@@ -287,7 +290,7 @@ Sub btnConvert_OnClick()
 					' Пустой заголовок
 					docTitle = ""
 					' Открываем документ
-					DoEvents
+					DoEvents(0)
 					Set objDocument = objWord.Documents.Open(objFile.Path)
 					' Получаем объект свойст документа
 					Set customProp = objDocument.BuiltinDocumentProperties
@@ -299,7 +302,7 @@ Sub btnConvert_OnClick()
 					' Перебираем свойства документа
 					For Each prop in customProp
 						' Устанавливаем нужные свойства документа
-						DoEvents
+						DoEvents(0)
 						Select case prop.Name
 							' Заголовок документа
 							case "Title"
@@ -329,7 +332,7 @@ Sub btnConvert_OnClick()
 					current = CStr(CInt((fCount * 100) / (count - 1))) & "%"
 					ProgressLine.style.width = current
 					ProgressVal.innerText = current
-					DoEvents
+					DoEvents(0)
 				End If
 			End If
 		Next
@@ -350,13 +353,13 @@ Sub btnConvert_OnClick()
 	EnabledApp
 End Sub
 
-Sub DoEvents()
-    With CreateObject("Msxml2.ServerXMLHTTP")
-        .Abort
-        .Open "HEAD", "http://1.0.0.1", True
-        .Send
-        .WaitForResponse 0
-    End With
+Sub DoEvents(sec)
+	With CreateObject("Msxml2.ServerXMLHTTP")
+		.Abort
+		.Open "HEAD", "http://1.0.0.1", True
+		.Send
+		.WaitForResponse sec
+	End With
 End Sub
 
 Sub ReadIniFile (FileName )
@@ -386,7 +389,7 @@ Sub SaveSettings(strFile)
 		For Each k In ReadIni
 			.WriteLine k & "=" & ReadIni(k)
 		Next
-    End With
+	End With
 End Sub
 
 Sub PlaySound(FileName)

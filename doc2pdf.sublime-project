@@ -37,8 +37,8 @@
     "build_systems":
     [
         {
-            "name": "Pug2Hta",
-            "shell_cmd": "pug \"$file\" -E hta -o \"$file_path\" --doctype html --pretty",
+            "name": "Compile project «TimeTable2pdf",
+            "shell_cmd": "lessc \"$project_path\\css\\main.less\" --plugin=less-plugin-clean-css --rootpath=\"$project_path\" \"$project_path\\css\\main.css\" && pug \"$project_path\\index.pug\" -E tpl -o \"$project_path\" && copy /B \"$project_path\\icon.ico\" + \"$project_path\\index.tpl\" \"$project_path\\TimeTable2pdf.hta\" && del \"$project_path\\index.tpl\"",
 			"selector": "*.pug"
         }
     ]
