@@ -1,0 +1,33 @@
+{
+	"name": "timetableword2pdf",
+	"version": "1.0.2",
+	"description": "README.md",
+	"main": "Gruntfile.js",
+	"scripts": {
+		"test": "npm grunt -v && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/KSOSH/TimeTableWord2Pdf.git"
+	},
+	"author": {
+		"name": "ProjectSoft",
+		"email": "projectsoft2009@yandex.ru",
+		"url": "https://projectsoft.ru/"
+	},
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/KSOSH/TimeTableWord2Pdf/issues"
+	},
+	"homepage": "https://github.com/KSOSH/TimeTableWord2Pdf#readme",
+	"dependencies": {
+		"grunt": "^1.3.0",
+		"grunt-contrib-less": "^2.0.0",
+		"grunt-contrib-pug": "^2.0.0",
+		"grunt-contrib-watch": "^1.1.0",
+		"grunt-exec": "^3.0.0",
+		"grunt-html-images-data-uri": "git+https://github.com/ProjectSoft-STUDIONIONS/grunt-html-images-data-uri.git",
+		"load-grunt-tasks": "^5.1.0",
+		"time-grunt": "^2.0.0"
+	}
+}

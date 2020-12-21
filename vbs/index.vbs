@@ -333,7 +333,7 @@ Sub btnConvert_OnClick()
 					' Обнуляем переменную
 					' Set objDocument = Nothing
 					fCount = fCount + 1
-					current = CStr(CInt((fCount * 100) / (count - 1))) & "%"
+					current = CStr(Round((fCount * 100) / (count - 1))) & "%"
 					ProgressLine.style.width = current
 					ProgressVal.innerText = current
 					DoEvents(0)

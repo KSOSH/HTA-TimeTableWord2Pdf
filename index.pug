@@ -8,25 +8,28 @@ html(lang="ru")
 		.header.clearfix
 			h1.text-center.text-bold-italic Конвертирование расписаний дистанционных уроков
 			.help-icon
-				include pug_inc/helpicon.pug
+				include pug_inc/include/helpicon.pug
 		.wrapper.clearfix
 			.main.clearfix
 				.app.clearfix
 					.type
-						fieldset
-							legend Наименование организации
+						fieldset(text="Наименование организации")
+							legend
+								span Наименование организации
 							label.input-label
 								input#OU(type="text" tabindex="-1")
-						fieldset
-							legend Тип расписания
+						fieldset(text="ип расписания")
+							legend
+								span Тип расписания
 							label.input-label
 								input#RS(type="radio" name="TypeTimeTable" checked tabindex="-1")
 								|Расписание уроков
 							label.input-label.last
 								input#VD(type="radio" name="TypeTimeTable" tabindex="-1")
 								|Внеурочные занятия
-						fieldset
-							legend Данные для CSV файла
+						fieldset(text="Данные для CSV файла")
+							legend
+								span Данные для CSV файла
 							p Введите путь директории на сервере в которую будут залиты файлы.
 							label.input-label.last
 								input#SRV(type="text" tabindex="-1")
@@ -50,7 +53,7 @@ html(lang="ru")
 			a#GBOU.link.last ГБОУ СОШ пос. Комсомольский м. р Кинельский Самарской обл.
 			br
 			|© 2009 ‒ all right reserved
-			include pug_inc/git.pug
+			include pug_inc/include/git.pug
 		.help#HELP(style="display: none;")
 			.help_wrapper
 				.help_header
@@ -64,29 +67,29 @@ html(lang="ru")
 							p
 								|Окно программы
 								.text-center
-									include pug_inc/0000.pug
+									include pug_inc/include/0000.pug
 						li
 							p
 								|Выбор директории с файлами расписаний
 								.text-center
-									include pug_inc/0001.pug
+									include pug_inc/include/0001.pug
 						li
 							p
 								|Работа программы
 								.text-center
-									include pug_inc/0002.pug
+									include pug_inc/include/0002.pug
 						li
 							p
 								|Структура папки «Дистанционное». Обратите внимание, что расписания лежат по датам
 								br
 								|На скрине имена файлов в папке на конкретно один день
 								.text-center
-									include pug_inc/0003.pug
+									include pug_inc/include/0003.pug
 						li
 							p
 								|Результат работы программы. Файлы так же складываются в директории по датам и по типам расписания
 								.text-center
-									include pug_inc/0004.pug
+									include pug_inc/include/0004.pug
 						li
 							p
 								|Результат записи в CSV файл для последующего использования в админке сайта при размещении расписания. Сайт нашей школы использует Evolution CMS, где установлено поле для прикрепления файлов multiTv и там есть возможность автоматического заполнения поля из данных CSV файлов.
@@ -95,12 +98,12 @@ html(lang="ru")
 								br
 								|Тоже самое касается и Joomla, и любых других CMS.
 								.text-center
-									include pug_inc/0005.pug
+									include pug_inc/include/0005.pug
 						li
 							p
 								|Заполненое поле multiTv в админке Evolution CMS
 								.text-center
-									include pug_inc/0006.pug
+									include pug_inc/include/0006.pug
 		style
 			include css/main.css
 		script(language="VBScript")

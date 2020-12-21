@@ -38,8 +38,7 @@
     [
         {
             "name": "Compile project «TimeTable2pdf",
-            "shell_cmd": "lessc \"$project_path\\css\\main.less\" --plugin=less-plugin-clean-css --rootpath=\"$project_path\" \"$project_path\\css\\main.css\" && pug \"$project_path\\index.pug\" -E tpl -o \"$project_path\" && copy /B \"$project_path\\icon.ico\" + \"$project_path\\index.tpl\" \"$project_path\\TimeTable2pdf.hta\" && del \"$project_path\\index.tpl\"",
-			"selector": "*.pug"
+            "shell_cmd": "npm grunt --base=\"$project_path\" -v"
         }
     ]
 }

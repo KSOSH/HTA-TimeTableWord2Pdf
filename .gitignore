@@ -1,7 +1,11 @@
 *.map.*
 *.html
 *.css
+*-lock.*
 */**/*.map.*
 */**/*.html
 */**/*.css
 *.sublime-workspace
+pug_inc/include
+test/*
+node_modules/*
