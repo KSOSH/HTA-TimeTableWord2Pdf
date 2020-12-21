@@ -238,6 +238,10 @@ Sub OU_OnChange()
 	SaveSettings "config.cfg"
 End Sub
 
+Sub GIT_OnClick()
+	WShell.Run "https://github.com/KSOSH/TimeTableWord2Pdf"
+End Sub
+
 Sub ProjectSoft_OnClick()
 	WShell.Run "https://projectsoft.ru/"
 End Sub
