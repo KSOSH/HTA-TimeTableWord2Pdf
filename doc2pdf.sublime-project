@@ -38,7 +38,8 @@
     [
         {
             "name": "Compile project «TimeTable2pdf",
-            "shell_cmd": "grunt --gruntfile \"$project_path\\Grunfile.js\""
+            "shell_cmd": "grunt",
+			"working_dir": "${project_path}"
         }
     ]
 }

@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+	grunt.loadTasks('grunt-tasks');
 	require('load-grunt-tasks')(grunt);
 	require('time-grunt')(grunt);
 	const path = require('path');
@@ -6,7 +7,7 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		globalConfig: {},
 		pkg: pkg,
-		less: {
+		"less": {
 			main: {
 				options : {
 					compress: true,
@@ -19,17 +20,16 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		htmlImagesDataUri: {
+		"data-uri": {
 			dist: {
 				src: ['test/*.html'],
 				dest: 'test/',
 				options: {
-					target: ['images/*.*', 'help/*.*'],
-					baseDir: './'
+					baseDir: __dirname
 				}
 			}
 		},
-		pug: {
+		"pug": {
 			files: {
 				options: {
 					pretty: '',//'\t',
@@ -40,14 +40,14 @@ module.exports = function(grunt) {
 				}
 			}
 		},
-		exec: {
+		"exec": {
 			hta: {
-				cmd: 'copy /y /B "' + path.resolve(__dirname + '/icon.ico') + '" + "' + path.resolve(__dirname + '/test/index.html') + '" "' + path.resolve(__dirname + '/TimeTable2pdf.hta') + '"'
+				cmd: 'copy /y /B "' + path.join(__dirname, 'icon.ico') + '" + "' + path.join(__dirname, 'test/index.html') + '" "' + path.resolve(__dirname + '/TimeTable2pdf.hta') + '"'
 			},
 			run: {
 				cmd: 'cmd /c start TimeTable2pdf.hta'
 			}
 		}
 	});
-	grunt.registerTask('default',["less", "pug", "htmlImagesDataUri", "exec"]);
+	grunt.registerTask('default',["less", "pug", "data-uri", "exec"]);
 }

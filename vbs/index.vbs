@@ -313,7 +313,8 @@ Sub btnConvert_OnClick()
 					' Получаем дату
 					rsDate = removeSpace(objFSO.GetBaseName(removeSpace(strSourceFolder)) & "." & objFSO.GetExtensionName(strSourceFolder))
 					' Собираем заголовок
-					docTitle = strTimeTable & " " & objFSO.GetBaseName(UCase(removeSpace(objFile.Name))) & cPrefixTitle & rsDate
+					fn = objFSO.GetBaseName(UCase(removeSpace(objFile.Name)))
+					docTitle = strTimeTable & " " & fn & cPrefixTitle & rsDate
 					
 					' Перебираем свойства документа
 					For Each prop in customProp
@@ -337,16 +338,13 @@ Sub btnConvert_OnClick()
 					' Сохраняем документ как PDF. Транслит имени файла для сохранения
 					' Так же сначало сохраниться сам документ перед конвертацией.
 					objDocument.SaveAs2 objFSO.BuildPath(outputDir, Rus2Lat(removeSpace(objFSO.GetBaseName(objFile.Name))) & ".pdf"), PDF
-					
-					fn = objFSO.GetBaseName(UCase(removeSpace(objFile.Name)))
 					If StrComp(fn, "10") = 0 Or StrComp(fn, "11") = 0 Then
+						' 10 - 11 классы отдельно
 						out10 = out10 & """" & docTitle & """;""" & assetsFolder & "/" & rsDate & srvTimeTable & Rus2Lat(removeSpace(objFSO.GetBaseName(objFile.Name))) & ".pdf""" & vbCrlf
 					Else
+						' 5 - 9 классы отдельно
 						out5 = out5 & """" & docTitle & """;""" & assetsFolder & "/" & rsDate & srvTimeTable & Rus2Lat(removeSpace(objFSO.GetBaseName(objFile.Name))) & ".pdf""" & vbCrlf
 					End If
-					' Записываем данные в csv файл
-					'csvText = """" & docTitle & """;""" & assetsFolder & "/" & rsDate & srvTimeTable & Rus2Lat(removeSpace(objFSO.GetBaseName(objFile.Name))) & ".pdf"""
-					'csvFile.WriteLine(csvText)
 					' Закрываем документ
 					objDocument.Close
 					' Обнуляем переменную
@@ -362,8 +360,9 @@ Sub btnConvert_OnClick()
 		End If
 		' Обнуляем переменную
 		Set objWord = Nothing
-		' Закрываем csv файл
+		' Записываем данные в csv файл
 		csvFile.Write(out5 & out10)
+		' Закрываем csv файл
 		csvFile.Close
 		PlaySound sndFile
 	End If

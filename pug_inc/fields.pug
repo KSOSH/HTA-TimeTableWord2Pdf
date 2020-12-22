@@ -1,0 +1,21 @@
+.type
+	fieldset.first(text="Наименование организации")
+		legend
+			span Наименование организации
+		label.input-label
+			input#OU(type="text" tabindex="-1")
+	fieldset(text="ип расписания")
+		legend
+			span Тип расписания
+		label.input-label
+			input#RS(type="radio" name="TypeTimeTable" checked tabindex="-1")
+			|Расписание уроков
+		label.input-label.last
+			input#VD(type="radio" name="TypeTimeTable" tabindex="-1")
+			|Внеурочные занятия
+	fieldset(text="Данные для CSV файла")
+		legend
+			span Данные для CSV файла
+		p Введите путь директории на сервере в которую будут залиты файлы.
+		label.input-label.last
+			input#SRV(type="text" tabindex="-1")
