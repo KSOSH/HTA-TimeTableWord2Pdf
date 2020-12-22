@@ -1,9 +1,13 @@
 Option Explicit
 
+Const GBOU_LINK = "https://komsomol.minobr63.ru/"
+Const GIT_LINK = "https://github.com/KSOSH/TimeTableWord2Pdf/"
+Const PROJECTSOFT_LINK = "https://projectsoft.ru/"
+
 Const PDF = 17
 Const cPrefixTitle = " КЛАССА НА "
-Const windowW = 1024
-Const windowH = 740
+Const windowW = 900
+Const windowH = 650
 
 Dim WShell: Set WShell = CreateObject("WScript.Shell")
 Dim objFSO: Set objFSO = CreateObject("Scripting.FileSystemObject")
@@ -239,15 +243,15 @@ Sub OU_OnChange()
 End Sub
 
 Sub GIT_OnClick()
-	WShell.Run "https://github.com/KSOSH/TimeTableWord2Pdf"
+	WShell.Run GIT_LINK
 End Sub
 
 Sub ProjectSoft_OnClick()
-	WShell.Run "https://projectsoft.ru/"
+	WShell.Run PROJECTSOFT_LINK
 End Sub
 
 Sub GBOU_OnClick()
-	WShell.Run "https://komsomol.minobr63.ru/"
+	WShell.Run GBOU_LINK
 End Sub
 
 Sub btnHelp_OnClick()
@@ -285,12 +289,18 @@ Sub btnConvert_OnClick()
 				regExc.Global = False
 				regExc.Pattern = "^~\$"
 				If Not regExc.Test(objFile.Name) Then
+					DoEvents(0)
+					fCount = fCount + 1
+					current = CStr(Round((fCount * 100) / (count))) & "%"
+					ProgressLine.style.width = current
+					ProgressVal.innerText = current
+					DoEvents(0)
 					tFName = objFile.Name
 					' Запускаем Word если он ещё не запущен
 					If objWord Is Nothing Then
 						Set objWord = CreateObject("Word.Application")
 					End If
-					output.innerText = tFName
+					output.innerText = "Конвертирование: " + tFName
 					' Пустой заголовок
 					docTitle = ""
 					' Открываем документ
@@ -332,12 +342,9 @@ Sub btnConvert_OnClick()
 					objDocument.Close
 					' Обнуляем переменную
 					' Set objDocument = Nothing
-					fCount = fCount + 1
-					current = CStr(Round((fCount * 100) / (count - 1))) & "%"
-					ProgressLine.style.width = current
-					ProgressVal.innerText = current
-					DoEvents(0)
 				End If
+			Else
+				count = count - 1
 			End If
 		Next
 		' Если Word запущен - закроем его

@@ -43,6 +43,9 @@ module.exports = function(grunt) {
 		exec: {
 			hta: {
 				cmd: 'copy /y /B "' + path.resolve(__dirname + '/icon.ico') + '" + "' + path.resolve(__dirname + '/test/index.html') + '" "' + path.resolve(__dirname + '/TimeTable2pdf.hta') + '"'
+			},
+			run: {
+				cmd: 'cmd /c start TimeTable2pdf.hta'
 			}
 		}
 	});
