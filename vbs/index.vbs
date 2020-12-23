@@ -17,15 +17,12 @@ Dim ReadIni: Set ReadIni = CreateObject("Scripting.Dictionary")
 Dim objFile
 
 Dim objPlayer
-Dim sndFile
-sndFile =  WShell.ExpandEnvironmentStrings("%windir%") & "\Media\chimes.wav"
+Dim byff
 
 Dim tGboy
 tGboy = "ГБОУ СОШ пос. Комсомольский м. р. Кинельский Самарской обл."
 Dim startPath
 startPath = WShell.SpecialFolders.Item("Desktop") & "\Дистанционное"
-Dim tmpPath
-tmpPath = WShell.SpecialFolders.Item("Temp") & "\Dist"
 
 Dim srvTimeTable
 Dim winTimeTable
@@ -45,6 +42,9 @@ Dim SRV: Set SRV = document.getElementById("SRV")
 Dim btnConvert: Set btnConvert = document.getElementById("btnConvert")
 Dim btnHelp: Set btnHelp = document.getElementById("btnHelp")
 Dim btnClose: Set btnClose = document.getElementById("btnClose")
+Dim BGSOUND: Set BGSOUND = document.getElementById("BGSOUND")
+Dim SND_1: Set SND_1 = document.getElementById("SND_1")
+Dim SND_2: Set SND_2 = document.getElementById("SND_2")
 
 window.resizeTo windowW, windowH
 window.moveTo (window.screen.availWidth - windowW) / 2, (window.screen.availHeight - windowH) / 2
@@ -54,8 +54,56 @@ ReadIni.Add "SRV", "assets/files/0000/do"
 ReadIniFile "config.cfg"
 Reset
 CheckData
+Dim HWND
+HWND = &H0
 
-'MsgBox TypeName(Window)
+Sub SaveSounds()
+	Dim fileName, winPath, id, val, inp
+	Dim RE: Set RE = CreateObject("VBScript.RegExp")
+	RE.Pattern = "data\:audio\/x-wav;base64,"
+	winPath = WShell.ExpandEnvironmentStrings("%AppData%") & "\TimeTableWord2PDF\Media\"
+	CreateFolderRecursive(winPath)
+	For id = 1 to 2
+		fileName = winPath & "snd-000" & CStr(id) & ".wav"
+		Set Inp = document.getElementById("SND_" & CStr(id))
+		If Not objFSO.FileExists(fileName) Then
+			val = Inp.innerText
+			val = RE.Replace(val, "")
+			val = Base64Decode(val)
+			With objFSO.createTextFile(fileName)
+				.Write(val)
+				.Close
+			End With
+		End If
+		Inp.innerText = fileName
+		Set Inp = Nothing
+	Next
+End Sub
+
+Sub SaveImages()
+	Dim fileName, winPath, id, val, inp, fln
+	Dim RE: Set RE = CreateObject("VBScript.RegExp")
+	RE.Pattern = "data\:image\/jpeg;base64,"
+	CreateFolderRecursive(winPath)
+	winPath = WShell.ExpandEnvironmentStrings("%AppData%") & "\TimeTableWord2PDF\Images\"
+	For id = 0 to 6
+		Set Inp = document.getElementById("IMG_" & CStr(id))
+		fileName = winPath & RIGHT(String(4, "0") & CStr(id), 4) & ".jpg"
+		If Not objFSO.FileExists(fileName) Then
+			val = Inp.SRC
+			val = Base64Decode(RE.Replace(val, ""))
+			With objFSO.createTextFile(fileName)
+				.Write(val)
+				.Close
+			End With
+		End If
+		Inp.SRC = fileName
+	Next
+End Sub
+
+SaveSounds
+saveImages
+
 ' Создадим папку "Дистанционное". Данная папка должна всегда существовать на рабочем столе. 
 ' Будем работать только в ней, тем самым не засоряем систему. 
 ' В данную папку нужно размещать директории с папками расписаний.
@@ -71,7 +119,7 @@ CheckData
 If Not objFSO.FolderExists(startPath) Then
 	objFSO.CreateFolder(startPath)
 End If
-'CreateFolderRecursive(tmpPath)
+
 ' Функция выбора директории
 Function openBrowserDlg
 	Dim objFolder, Result
@@ -79,7 +127,7 @@ Function openBrowserDlg
 	' Запускаем диалог выбора директории
 	' 512 - убрать кнопку "Создать папку". 1 - Выбирать только папки файловой системы. 512 + 1 = 513
 	' 16 - установить начальную дирректорию "Рабочий стол" без отображения виртуальных папок.
-	Set objFolder = objDlg.BrowseForFolder (0, strTimeTable & "." & vbCrlf & "Формат имени каталога - 	dd.mm.YYYY", 513, startPath) ' 0'
+	Set objFolder = objDlg.BrowseForFolder (HWND, strTimeTable & "." & vbCrlf & "Формат имени каталога - 	dd.mm.YYYY", 513, startPath) ' 0'
 	' Если objFolder объект Folder
 	If (Not objFolder Is Nothing) Then
 		' Возвращаем путь до выбранной директории
@@ -89,6 +137,7 @@ Function openBrowserDlg
 			MsgBox "Директорию """ & startPath & """ использовать нельзя.", vbExclamation, "Ошибка"
 		Else
 			Result = objFolder.Self.Path
+			PlaySound SND_2
 		End If
 	End If
 	openBrowserDlg = Result
@@ -183,7 +232,17 @@ Sub CheckData
 	End If
 End Sub
 
+Sub fnShellParentVB(path)
+	PlaySound SND_2
+	dim objShell
+	dim ssfWINDOWS
+	set objShell = CreateObject("shell.application")
+	objShell.Explore(path)
+	set objShell = nothing
+End Sub
+
 Sub btnSelectPath_OnClick()
+	PlaySound SND_2
 	Dim Result
 	Result = openBrowserDlg
 	If Not Result = "" Then
@@ -212,15 +271,13 @@ Sub EnabledApp
 	VD.Disabled = False
 End Sub
 
-Sub Window_OnResize()
-	MsgBox "Resize"
-End Sub
-
 Sub RS_OnChange()
+	PlaySound SND_2
 	CheckType
 End Sub
 
 Sub VD_OnChange()
+	PlaySound SND_2
 	CheckType
 End Sub
 
@@ -244,30 +301,35 @@ End Sub
 
 Sub GIT_OnClick()
 	WShell.Run GIT_LINK
+	PlaySound SND_2
 End Sub
 
 Sub ProjectSoft_OnClick()
 	WShell.Run PROJECTSOFT_LINK
+	PlaySound SND_2
 End Sub
 
 Sub GBOU_OnClick()
 	WShell.Run GBOU_LINK
+	PlaySound SND_2
 End Sub
 
 Sub btnHelp_OnClick()
 	HELP.style.display = "block"
+	PlaySound SND_2
 End Sub
 
 Sub btnClose_OnClick()
 	HELP.style.display = "none"
+	PlaySound SND_2
 End Sub
 
 Sub ImgClick(obj)
-	'WShell.Run obj.Src
-	'window.open(obj.Src)
+	WShell.Run obj.Src
 End Sub
 
 Sub btnConvert_OnClick()
+	PlaySound SND_2
 	Dim csvFile, strSourceFolder, outputDir, tFName, objWord, docTitle, Files, objDocument, customProp
 	Dim rsDate, prop, fCount, prg, csvText, assetsFolder, count, current, out10, out5, fn
 	strSourceFolder = folderPath.Value
@@ -364,12 +426,17 @@ Sub btnConvert_OnClick()
 		csvFile.Write(out5 & out10)
 		' Закрываем csv файл
 		csvFile.Close
-		PlaySound sndFile
+		PlaySound SND_1
+		If MsgBox("Открыть папку с результатом конвертирования?", vbYesNo + vbQuestion + vbDefaultButton2) = vbYes And count > 0 Then
+			fnShellParentVB(outputDir)
+			DoEvents(0)
+		End If
 	End If
 	CheckData
 	ProgressLine.style.width = "0%"
 	ProgressVal.innerText = "0%"
 	output.innerHtml = "&nbsp;"
+	DoEvents(0)
 	EnabledApp
 End Sub
 
@@ -384,14 +451,18 @@ End Sub
 
 Sub ReadIniFile (FileName )
 	ReadIni.RemoveAll
-	Dim FileStr: Set FileStr = objFSO.OpenTextFile( FileName, 1, True)
-	Dim line, pos
+	Dim winPath, line, pos, FileStr, fln
+	winPath = WShell.ExpandEnvironmentStrings("%AppData%") & "\TimeTableWord2PDF\"
+	CreateFolderRecursive(winPath)
+	fln = winPath & FileName
+	Set FileStr = objFSO.OpenTextFile( fln, 1, True)
 	While Not FileStr.AtEndOfStream
 		line = FileStr.ReadLine()
 		pos = InStr(line, "=")
 			if pos = 0 then Continue
 		ReadIni.Add Trim(Left(line, pos - 1)), Trim(Mid(line, pos + 1)) 
 	Wend
+	FileStr.Close
 	If Not ReadIni.Exists("GBOU") Then
 		ReadIni.Add "GBOU", "ГБОУ СОШ пос. Комсомольский м. р. Кинельский Самарской обл."
 	End If
@@ -404,26 +475,32 @@ Sub ReadIniFile (FileName )
 End Sub
 
 Sub SaveSettings(strFile)
-	With CreateObject("Scripting.FileSystemObject").CreateTextFile(strFile, True)
+	Dim winPath, fln
+	winPath = WShell.ExpandEnvironmentStrings("%AppData%") & "\TimeTableWord2PDF\"
+	CreateFolderRecursive(winPath)
+	fln = winPath & strFile
+	With CreateObject("Scripting.FileSystemObject").CreateTextFile(fln, True)
 		Dim k
 		For Each k In ReadIni
 			.WriteLine k & "=" & ReadIni(k)
 		Next
+		.Close
 	End With
 End Sub
 
-Sub PlaySound(FileName)
-	If objFSO.FileExists(FileName) Then
-		Set objPlayer = CreateObject("Wmplayer.OCX.7")
-		With objPlayer  ' saves typing
-			.settings.autoStart = True
-			.settings.volume = 100  ' 0 - 100
-			.settings.balance = 0  ' -100 to 100
-			.settings.enableErrorDialogs = False
-			.enableContextMenu = False
-			.URL = FileName
-		End With
-	End If
+Sub PlaySound(Input)
+	BGSOUND.src = Input.innerText
+	'If objFSO.FileExists(FileName) Then
+		'Set objPlayer = CreateObject("Wmplayer.OCX.7")
+		'With objPlayer  ' saves typing
+		'	.settings.autoStart = True
+		'	.settings.volume = 100  ' 0 - 100
+		'	.settings.balance = 0  ' -100 to 100
+		'	.settings.enableErrorDialogs = False
+		'	.enableContextMenu = False
+		'	.URL = FileName
+		'End With
+	'End If
 End Sub
 
 Function Rus2Lat(strRus)
@@ -514,4 +591,44 @@ Function Rus2Lat(strRus)
 	Next
 	strLat = replaceSpace(strLat)
 	Rus2Lat = strLat
+End Function
+
+Function Base64Decode(ByVal base64String)
+	Const Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+	Dim dataLength, sOut, groupBegin
+	base64String = Replace(base64String, """", "")
+	base64String = Replace(base64String, vbCrLf, "")
+	base64String = Replace(base64String, vbTab, "")
+	base64String = Replace(base64String, " ", "")
+	dataLength = Len(base64String)
+	If dataLength Mod 4 <> 0 Then
+		Err.Raise 1, "Base64Decode", "Bad Base64 string."
+		Exit Function
+	End If
+	For groupBegin = 1 To dataLength Step 4
+		Dim numDataBytes, CharCounter, thisChar, thisData, nGroup, pOut
+		numDataBytes = 3
+		nGroup = 0
+		For CharCounter = 0 To 3
+			thisChar = Mid(base64String, groupBegin + CharCounter, 1)
+			If thisChar = "=" Then
+				numDataBytes = numDataBytes - 1
+				thisData = 0
+			Else
+				thisData = InStr(1, Base64, thisChar, vbBinaryCompare) - 1
+			End If
+			If thisData = -1 Then
+				Err.Raise 2, "Base64Decode", "Bad character In Base64 string."
+				Exit Function
+			End If
+			nGroup = 64 * nGroup + thisData
+		Next
+		nGroup = Hex(nGroup)
+		nGroup = String(6 - Len(nGroup), "0") & nGroup
+		pOut = Chr(CByte("&H" & Mid(nGroup, 1, 2))) + _
+			Chr(CByte("&H" & Mid(nGroup, 3, 2))) + _
+			Chr(CByte("&H" & Mid(nGroup, 5, 2)))
+		sOut = sOut & Left(pOut, numDataBytes)
+	Next
+	Base64Decode = sOut
 End Function

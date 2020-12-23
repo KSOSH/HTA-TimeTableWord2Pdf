@@ -2,7 +2,7 @@ module.exports = function(grunt){
 	var fs = require('fs'),
 		path = require('path'),
 		datauri = require('datauri'),
-		regex = /(?:(?:["']data-uri\()(.*?)(?:\)["']))/,
+		regex = /(?:(?:["']?data-uri\()(.*?)(?:\)["']?))/,
 		util = grunt.util,
 		gruntFileDIr = path.resolve('./'),
 		expandFiles = grunt.file.expandFiles ? grunt.file.expandFiles : function(files) {
@@ -22,7 +22,7 @@ module.exports = function(grunt){
 				let path_url = path.join(baseDir, arr[i]),
 					url = arr[i].replace(/\\/, '/'),
 					data = await datauri(path_url),
-					pattern = '(?:(?:["\']data-uri\\()' + url.replace('/', '\\/') + '(?:\\)["\']))',
+					pattern = '(?:(?:["\']?data-uri\\()' + url.replace('/', '\\/') + '(?:\\)["\']?))',
 					reg = new RegExp(pattern, 'g');
 				content = content.replace(reg, '"' + data + '"');
 			}
