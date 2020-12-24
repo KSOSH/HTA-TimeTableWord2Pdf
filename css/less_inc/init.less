@@ -29,6 +29,9 @@ input, button, label, .progress {
 button, input[type=button] {
 	cursor: pointer;
 	font-size: 16px;
+	&[disabled] {
+		cursor: not-allowed;
+	}
 }
 input[type=text] {
 	font-size: 16px;

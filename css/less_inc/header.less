@@ -1,3 +1,4 @@
+@top: -4px;
 .header {
 	box-shadow: 0 0 1em rgba(0, 0, 0, .7);
 	.help-icon {
@@ -13,5 +14,37 @@
 		margin-top: 23px;
 		margin-bottom: 23px;
 		font-size: 25px;
+	}
+	#currentTime {
+		color: #fff;
+		top: @top;
+		left: 5px;
+		z-index: 6;
+		&,
+		&_shadow,
+		&_shadow_top {
+			position: absolute;
+			font-family: "JetBrains Mono", Consolas, Tahoma, sans-serif;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		&_shadow {
+			top: 2 + @top;
+			left: 7px;
+			color: #777;
+			z-index: 4;
+		}
+		&_shadow_top {
+			top: @top - 1;
+			left: 4px;
+			color: #dddddd;
+			z-index: 2;
+		}
+	}
+	.check_sound {
+		position: absolute;
+		left: 5px;
+		bottom: 5px;
+		cursor: pointer;
 	}
 }

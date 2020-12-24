@@ -1,106 +1,136 @@
 Option Explicit
-
+' Ссылки
 Const GBOU_LINK = "https://komsomol.minobr63.ru/"
 Const GIT_LINK = "https://github.com/KSOSH/TimeTableWord2Pdf/"
 Const PROJECTSOFT_LINK = "https://projectsoft.ru/"
-
+' Сохранять в PDF
 Const PDF = 17
-Const cPrefixTitle = " КЛАССА НА "
+' Размер окна
 Const windowW = 900
 Const windowH = 650
-
+' Объект Shell
 Dim WShell: Set WShell = CreateObject("WScript.Shell")
+' Объект для работы с файловой системой
 Dim objFSO: Set objFSO = CreateObject("Scripting.FileSystemObject")
+' Для запуска диалога
 Dim objDlg: Set objDlg = CreateObject("Shell.Application")
+' Объект для работы с регулярными выражениями
 Dim regExc: Set regExc = CreateObject("VBScript.RegExp")
-Dim ReadIni: Set ReadIni = CreateObject("Scripting.Dictionary")	
-Dim objFile
+' Библиотека настроек
+Dim ReadIni: Set ReadIni = CreateObject("Scripting.Dictionary")
 
-Dim objPlayer
-Dim byff
-
+' Название организации
 Dim tGboy
 tGboy = "ГБОУ СОШ пос. Комсомольский м. р. Кинельский Самарской обл."
+' Одна из составляющих заголовка документа
+Const cPrefixTitle = " КЛАССА НА "
+' Рабочая директория
 Dim startPath
 startPath = WShell.SpecialFolders.Item("Desktop") & "\Дистанционное"
-
+' серверная директория /rs/ или /vd/
 Dim srvTimeTable
+' системная директория \rs\ или \vd\
 Dim winTimeTable
+' Составляющая заголовка документа РАСПИСАНИЯ или ВНЕУРОЧНОЙ
 Dim strTimeTable
-
+' Состояние звука
+Dim onoff
+' Панель спраки
 Dim HELP: Set HELP = document.getElementById("HELP")
+' Вывод обрабатываемых файлов
 Dim output: Set output = document.getElementById("output")
+' Кнопка запуска диалога выбора директории
 Dim btnSelectPath: Set btnSelectPath = document.getElementById("btnSelectPath")
+' Поле значения выбранной директории
 Dim folderPath: Set folderPath = document.getElementById("folderPath")
+' вывод значения выбранной директории
 Dim folderPathText: Set folderPathText = document.getElementById("folderPathText")
+' Поле значения Названия организации
 Dim OU: Set OU = document.getElementById("OU")
-Dim gb_link: Set gb_link = document.getElementById("GBOU")
-Dim ps_link: Set ps_link = document.getElementById("ProjectSoft")
-Dim ProgressLine: Set ProgressLine = document.getElementById("progress_line")
-Dim ProgressVal: Set ProgressVal = document.getElementById("progress_value")
+' Поле значения серверной директории
 Dim SRV: Set SRV = document.getElementById("SRV")
+' Линия прогресса
+Dim ProgressLine: Set ProgressLine = document.getElementById("progress_line")
+' значение прогресса
+Dim ProgressVal: Set ProgressVal = document.getElementById("progress_value")
+' Кнопка запуска конвертирования
 Dim btnConvert: Set btnConvert = document.getElementById("btnConvert")
-Dim btnHelp: Set btnHelp = document.getElementById("btnHelp")
-Dim btnClose: Set btnClose = document.getElementById("btnClose")
+' Для воспроизведения звука
 Dim BGSOUND: Set BGSOUND = document.getElementById("BGSOUND")
+' Объекты хранящие данные звуковых файлов
 Dim SND_1: Set SND_1 = document.getElementById("SND_1")
 Dim SND_2: Set SND_2 = document.getElementById("SND_2")
-
+Dim SND_3: Set SND_3 = document.getElementById("SND_3")
+' Объекты отключения/включения звука
+Dim CH_SOUND: Set CH_SOUND = document.getElementById("CH_SOUND")
+' Ресайз и перемещение окна в центер экрана
 window.resizeTo windowW, windowH
 window.moveTo (window.screen.availWidth - windowW) / 2, (window.screen.availHeight - windowH) / 2
+' Заносим значения по умолчанию
 ReadIni.Add "GBOU", tGboy
 ReadIni.Add "SRV", "assets/files/0000/do"
-
+ReadIni.Add "SOUND", 1
+' Читаем конфигурационный файл
 ReadIniFile "config.cfg"
+CH_SOUND.Checked = CBool(ReadIni("SOUND")) 
+' Ресет приложения
 Reset
+' Устанавливаем свойства кнопок
 CheckData
+
 Dim HWND
 HWND = &H0
-
+' Сохранение данных в звуковые файлы
 Sub SaveSounds()
 	Dim fileName, winPath, id, val, inp
 	Dim RE: Set RE = CreateObject("VBScript.RegExp")
 	RE.Pattern = "data\:audio\/x-wav;base64,"
 	winPath = WShell.ExpandEnvironmentStrings("%AppData%") & "\TimeTableWord2PDF\Media\"
 	CreateFolderRecursive(winPath)
-	For id = 1 to 2
+	For id = 1 to 3
 		fileName = winPath & "snd-000" & CStr(id) & ".wav"
 		Set Inp = document.getElementById("SND_" & CStr(id))
 		If Not objFSO.FileExists(fileName) Then
 			val = Inp.innerText
-			val = RE.Replace(val, "")
+			' val = RE.Replace(val, "")
+			'MsgBox val
 			val = Base64Decode(val)
 			With objFSO.createTextFile(fileName)
 				.Write(val)
 				.Close
 			End With
+			DoEvents(0)
 		End If
 		Inp.innerText = fileName
 		Set Inp = Nothing
 	Next
 End Sub
-
+' Сохранение данных в файлы изображений
 Sub SaveImages()
 	Dim fileName, winPath, id, val, inp, fln
 	Dim RE: Set RE = CreateObject("VBScript.RegExp")
 	RE.Pattern = "data\:image\/jpeg;base64,"
-	CreateFolderRecursive(winPath)
 	winPath = WShell.ExpandEnvironmentStrings("%AppData%") & "\TimeTableWord2PDF\Images\"
+	CreateFolderRecursive(winPath)
 	For id = 0 to 6
 		Set Inp = document.getElementById("IMG_" & CStr(id))
 		fileName = winPath & RIGHT(String(4, "0") & CStr(id), 4) & ".jpg"
 		If Not objFSO.FileExists(fileName) Then
-			val = Inp.SRC
-			val = Base64Decode(RE.Replace(val, ""))
+			val = Inp.Title
+			val = Base64Decode(val)
 			With objFSO.createTextFile(fileName)
 				.Write(val)
 				.Close
 			End With
+			DoEvents(0)
 		End If
+		Inp.Title = ""
 		Inp.SRC = fileName
+		Set Inp = Nothing
 	Next
 End Sub
 
+' Сохранение данных
 SaveSounds
 saveImages
 
@@ -142,9 +172,8 @@ Function openBrowserDlg
 	End If
 	openBrowserDlg = Result
 End Function
-
+' Определяем тип расписания
 Function CheckType
-	' TypeTimeTable
 	If TypeTimeTable(0).Checked Then
 		winTimeTable = "\rs\"
 		srvTimeTable = "/rs/"
@@ -155,7 +184,7 @@ Function CheckType
 		strTimeTable = "РАСПИСАНИЕ ЗАНЯТИЙ ВНЕУРОЧНОЙ ДЕЯТЕЛЬНОСТИ"
 	End If
 End Function
-
+' Определяем, есть ли файлы в выбраной директории
 Function CheckFiles(path)
 	Dim Result, oFile
 	Result = False
@@ -169,12 +198,9 @@ Function CheckFiles(path)
 			End If
 		End If
 	Next
-	'If Not oFile = Nothing Then
-	'	oFile = Nothing
-	'End If
 	CheckFiles = Result
 End Function
-
+' Рекурсивное создание директории
 Function CreateFolderRecursive(FullPath)
 	Dim arr, dir, path
 	Dim oFs
@@ -189,7 +215,7 @@ Function CreateFolderRecursive(FullPath)
 	Next
 	Set oFs = Nothing
 End Function
-
+' Удаление лишних пробелов
 Function replaceSpace(fName)
 	Dim str
 	regExc.Global = True
@@ -197,7 +223,7 @@ Function replaceSpace(fName)
 	str = regExc.Replace(fName, " ")
 	replaceSpace = str
 End Function
-
+' Удаление всех пробелов
 Function removeSpace(fName)
 	Dim str
 	regExc.Global = True
@@ -205,13 +231,11 @@ Function removeSpace(fName)
 	str = regExc.Replace(fName, "")
 	removeSpace = str
 End Function
-
-Sub Reset
+' Ресет приложения
+Sub Reset()
 	RS.Checked = True
 	ProgressLine.style.width = "0%"
 	ProgressVal.innerText = "0%"
-	'OU.Value = "ГБОУ СОШ пос. Комсомольский м. р. Кинельский Самарской обл."
-	'SRV.Value = "assets/files/0000/do"
 	folderPath.Value = ""
 	folderPath.Title = ""
 	folderPathText.innerHtml = "&nbsp;"
@@ -219,8 +243,8 @@ Sub Reset
 	btnConvert.Disabled = True
 	CheckType
 End Sub
-
-Sub CheckData
+' Определяем тип расписания
+Sub CheckData()
 	If folderPath.Value = "" Then
 		btnConvert.Disabled = True
 	Else
@@ -231,7 +255,7 @@ Sub CheckData
 		End If
 	End If
 End Sub
-
+' Открытие папки в браузере
 Sub fnShellParentVB(path)
 	PlaySound SND_2
 	dim objShell
@@ -240,7 +264,7 @@ Sub fnShellParentVB(path)
 	objShell.Explore(path)
 	set objShell = nothing
 End Sub
-
+' Клик на кнопке выбора дирректории
 Sub btnSelectPath_OnClick()
 	PlaySound SND_2
 	Dim Result
@@ -256,31 +280,41 @@ Sub btnSelectPath_OnClick()
 	folderPathText.Title = Result
 	CheckData
 End Sub
-
-Sub DisabledApp
+' Отключить доступность кнопок
+Sub DisabledApp()
 	btnConvert.Disabled = True
 	btnSelectPath.Disabled = True
 	RS.Disabled = True
 	VD.Disabled = True
 End Sub
-
-Sub EnabledApp
+' Включить доступность кнопок
+Sub EnabledApp()
 	CheckData
 	btnSelectPath.Disabled = False
 	RS.Disabled = False
 	VD.Disabled = False
 End Sub
-
+' Включение/Отключение Звука
+Sub CH_SOUND_OnChange()
+	Dim z
+	If Not ReadIni.Exists("SOUND") Then
+		ReadIni.Add "SOUND", 1
+	End If
+	ReadIni("SOUND") = Abs(CH_SOUND.Checked)
+	SaveSettings "config.cfg"
+	PlaySound SND_2
+End Sub
+' Изменение типа расписания на РАСПИСАНИЕ
 Sub RS_OnChange()
 	PlaySound SND_2
 	CheckType
 End Sub
-
+' Изменение типа расписания на ВНЕУРОЧНОЕ
 Sub VD_OnChange()
 	PlaySound SND_2
 	CheckType
 End Sub
-
+' Изменение директории сервера
 Sub SRV_OnChange()
 	'MsgBox SRV.Value
 	If Not ReadIni.Exists("SRV") Then
@@ -289,7 +323,7 @@ Sub SRV_OnChange()
 	ReadIni("SRV") = SRV.Value
 	SaveSettings "config.cfg"
 End Sub
-
+' Изменение Названия умолчания
 Sub OU_OnChange()
 	'MsgBox OU.Value
 	If Not ReadIni.Exists("GBOU") Then
@@ -298,40 +332,52 @@ Sub OU_OnChange()
 	ReadIni("GBOU") = OU.Value
 	SaveSettings "config.cfg"
 End Sub
-
+' Переход на GitHub
 Sub GIT_OnClick()
 	WShell.Run GIT_LINK
 	PlaySound SND_2
 End Sub
-
+' Переход на сайт разработчика
 Sub ProjectSoft_OnClick()
 	WShell.Run PROJECTSOFT_LINK
 	PlaySound SND_2
 End Sub
-
+' Переход на сайт школы
 Sub GBOU_OnClick()
 	WShell.Run GBOU_LINK
 	PlaySound SND_2
 End Sub
-
+' Клик на кнопке помощи
 Sub btnHelp_OnClick()
 	HELP.style.display = "block"
 	PlaySound SND_2
 End Sub
-
+' Закрытие панели помощи
 Sub btnClose_OnClick()
 	HELP.style.display = "none"
 	PlaySound SND_2
 End Sub
-
+' Клик на изображениях помощи
 Sub ImgClick(obj)
-	WShell.Run obj.Src
+	Dim src
+	src = obj.Src
+	Dim RE: Set RE = CreateObject("VBScript.RegExp")
+	RE.Pattern = "file:\/\/\/"
+	src = RE.Replace(src, "")
+	RE.Pattern = "\/"
+	src = RE.Replace(src, "\\")
+	If objFSO.FileExists(src) Then
+		WShell.Run src
+		PlaySound SND_2
+	Else
+		PlaySound SND_3
+	End If
 End Sub
-
+' Клик на кнопке старта конвертирования
 Sub btnConvert_OnClick()
 	PlaySound SND_2
 	Dim csvFile, strSourceFolder, outputDir, tFName, objWord, docTitle, Files, objDocument, customProp
-	Dim rsDate, prop, fCount, prg, csvText, assetsFolder, count, current, out10, out5, fn
+	Dim rsDate, prop, fCount, prg, csvText, assetsFolder, count, current, out10, out5, fn, objFile
 	strSourceFolder = folderPath.Value
 	outputDir = startPath & "\PDF\" & objFSO.GetFolder(strSourceFolder).Name & winTimeTable
 	assetsFolder = SRV.Value
@@ -439,7 +485,7 @@ Sub btnConvert_OnClick()
 	DoEvents(0)
 	EnabledApp
 End Sub
-
+' Application.ProcessMessage
 Sub DoEvents(sec)
 	With CreateObject("Msxml2.ServerXMLHTTP")
 		.Abort
@@ -448,7 +494,7 @@ Sub DoEvents(sec)
 		.WaitForResponse sec
 	End With
 End Sub
-
+' Чтение настроек
 Sub ReadIniFile (FileName )
 	ReadIni.RemoveAll
 	Dim winPath, line, pos, FileStr, fln
@@ -469,11 +515,15 @@ Sub ReadIniFile (FileName )
 	If Not ReadIni.Exists("SRV") Then
 		ReadIni.Add "SRV", "assets/files/0000/do"
 	End If
+	If Not ReadIni.Exists("SOUND") Then
+		ReadIni.Add "SOUND", 1
+	End If
+	onoff = CInt(ReadIni("SOUND"))
 	OU.Value = ReadIni("GBOU")
 	SRV.Value = ReadIni("SRV")
 	SaveSettings FileName
 End Sub
-
+' Сохранение настроек
 Sub SaveSettings(strFile)
 	Dim winPath, fln
 	winPath = WShell.ExpandEnvironmentStrings("%AppData%") & "\TimeTableWord2PDF\"
@@ -487,22 +537,13 @@ Sub SaveSettings(strFile)
 		.Close
 	End With
 End Sub
-
+' Воспроизведение звука
 Sub PlaySound(Input)
-	BGSOUND.src = Input.innerText
-	'If objFSO.FileExists(FileName) Then
-		'Set objPlayer = CreateObject("Wmplayer.OCX.7")
-		'With objPlayer  ' saves typing
-		'	.settings.autoStart = True
-		'	.settings.volume = 100  ' 0 - 100
-		'	.settings.balance = 0  ' -100 to 100
-		'	.settings.enableErrorDialogs = False
-		'	.enableContextMenu = False
-		'	.URL = FileName
-		'End With
-	'End If
+	If CH_SOUND.Checked Then
+		BGSOUND.src = Input.innerText
+	End If
 End Sub
-
+' Транслит
 Function Rus2Lat(strRus)
 	Dim i
 	Dim strTemp
@@ -592,7 +633,7 @@ Function Rus2Lat(strRus)
 	strLat = replaceSpace(strLat)
 	Rus2Lat = strLat
 End Function
-
+' Декодер Base64
 Function Base64Decode(ByVal base64String)
 	Const Base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 	Dim dataLength, sOut, groupBegin

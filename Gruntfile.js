@@ -23,7 +23,16 @@ module.exports = function(grunt) {
 		"data-uri": {
 			dist: {
 				src: ['test/*.html'],
-				dest: 'test/',
+				dest: 'tests/',
+				options: {
+					baseDir: __dirname
+				}
+			}
+		},
+		"data-uri-sync": {
+			dist: {
+				src: ['tests/*.html'],
+				dest: 'tests/',
 				options: {
 					baseDir: __dirname
 				}
@@ -42,12 +51,12 @@ module.exports = function(grunt) {
 		},
 		"exec": {
 			hta: {
-				cmd: 'copy /y /B "' + path.join(__dirname, 'icon.ico') + '" + "' + path.join(__dirname, 'test/index.html') + '" "' + path.resolve(__dirname + '/TimeTable2pdf.hta') + '"'
+				cmd: 'copy /y /B "' + path.join(__dirname, 'icon.ico') + `" + "` + path.join(__dirname, 'tests/index.html') + '" "' + path.resolve(__dirname + '/TimeTable2pdf.hta') + '"'
 			},
 			run: {
 				cmd: 'cmd /c start TimeTable2pdf.hta'
 			}
 		}
 	});
-	grunt.registerTask('default',["less", "pug", "data-uri", "exec"]);
+	grunt.registerTask('default',["less", "pug", "data-uri", "data-uri-sync", "exec"]);
 }

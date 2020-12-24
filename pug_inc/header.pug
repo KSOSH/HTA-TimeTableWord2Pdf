@@ -1,4 +1,13 @@
 .header.clearfix
+	#currentTime_shadow_top
+		|00:00:00
+	#currentTime
+		|00:00:00
+	#currentTime_shadow
+		|00:00:00
 	h1.text-center.text-bold-italic #{title}
+	label.check_sound
+		input#CH_SOUND(type="checkbox")
+		|Звук приложения
 	.help-icon
 		include helpicon.pug
