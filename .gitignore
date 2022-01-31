@@ -1,4 +1,5 @@
 *.map.*
+*.exe
 *.html
 *.css
 *-lock.*
